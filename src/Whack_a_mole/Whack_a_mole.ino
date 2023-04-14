@@ -28,6 +28,7 @@ int color_change_speed = 5;
 int target = 0;
 int time_to_hit = 1500;
 int loop_no = 0;
+int time_to_play = 10;
 bool errors_during_loop[3] = {0, 0, 0};
 
 int points = 0;
@@ -49,7 +50,6 @@ void setup() {
   pinMode(buzzer, OUTPUT);
 
   lcd.begin();
-  lcd.print("Whack the Moles!");
   lcd.setCursor(0, 1);
   lcd.print("Points: ");
   
@@ -82,11 +82,12 @@ void pause_game() {
   analogWrite(led2_Red, 0);
   analogWrite(led3_Red, 0);
   
-  int pause_time = rand() % 1000 + 500;
+  int pause_time = rand() % (time_to_hit / 2) + 500;
   time = millis();
   start_time = millis() + pause_time;
 
   while (millis() < start_time) { 
+    update_clock();
     if (digitalRead(led1_Input)) {
       penalty(1); //impose penalty
       delay(250);
@@ -124,6 +125,7 @@ void playing_time () {
   double end_time = millis() + hit_time_window;
 
   while (millis() < end_time) {
+    update_clock();
     if (digitalRead(led1_Input)) {
       if (target == 1) { // player pressed the right button
         add_points(led1_R); // add points for player
@@ -202,6 +204,11 @@ void playing_time () {
   }
 }
 
+void before_game() {
+  lcd.print("Whack the Moles!");
+  lcd.setCursor(0, 1);
+  lcd.print("Points: ");
+}
 void penalty(int diode_no) {
   if (!errors_during_loop[diode_no]) { //if the diode has been pressed for the first time this loop 
   //(This method means that we can not get penalty twice for clicking the same diode during a single loop)
@@ -228,6 +235,13 @@ void add_points(int light_remaining) {
   delay(250);
   noTone(buzzer);
 }
+void update_clock() {
+    lcd.setCursor(0, 1);
+    lcd.print("Time: ");
+    lcd.print(millis() / 1000);
+    lcd.print("s");
+}
+
 
 
 
