@@ -87,7 +87,15 @@ void pause_game() {
   start_time = millis() + pause_time;
 
   while (millis() < start_time) { 
-    if (digitalRead(led1_Input) || digitalRead(led2_Input) || digitalRead(led3_Input)) { //if button pressed in pause time -> penalty for the player
+    if (digitalRead(led1_Input)) {
+      penalty(); //impose penalty
+      delay(250);
+    } 
+    if (digitalRead(led2_Input)) {
+      penalty(); //impose penalty
+      delay(250);
+    } 
+    if (digitalRead(led3_Input)) {
       penalty(); //impose penalty
       delay(250);
     }
