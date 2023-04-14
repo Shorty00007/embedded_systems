@@ -88,15 +88,15 @@ void pause_game() {
 
   while (millis() < start_time) { 
     if (digitalRead(led1_Input)) {
-      penalty(); //impose penalty
+      penalty(1); //impose penalty
       delay(250);
     } 
     if (digitalRead(led2_Input)) {
-      penalty(); //impose penalty
+      penalty(2); //impose penalty
       delay(250);
     } 
     if (digitalRead(led3_Input)) {
-      penalty(); //impose penalty
+      penalty(3); //impose penalty
       delay(250);
     }
   }
@@ -208,6 +208,7 @@ void penalty(int diode_no) {
     points -= 450;
     lcd.setCursor(9, 1);
     lcd.print("      ");
+    lcd.setCursor(9, 1);
     lcd.print(points);
 
     errors_during_loop[diode_no] = 1;
@@ -221,6 +222,7 @@ void add_points(int light_remaining) {
   points += light_remaining * 10;
   lcd.setCursor(9, 1);
   lcd.print("      ");
+  lcd.setCursor(9, 1);
   lcd.print(points);
   tone(buzzer, 800);
   delay(250);
