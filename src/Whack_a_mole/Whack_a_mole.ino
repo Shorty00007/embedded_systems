@@ -88,7 +88,7 @@ void pause_game() {
 
   while (millis() < start_time) { 
     if (digitalRead(led1_Input) || digitalRead(led2_Input) || digitalRead(led3_Input)) { //if button pressed in pause time -> penalty for the player
-      //impose penalty
+      penalty(); //impose penalty
       delay(250);
     }
   }
@@ -198,7 +198,8 @@ void penalty(int diode_no) {
   if (!errors_during_loop[diode_no]) { //if the diode has been pressed for the first time this loop 
   //(This method means that we can not get penalty twice for clicking the same diode during a single loop)
     points -= 450;
-    lcd.setCursor(0, 10);
+    lcd.setCursor(9, 1);
+    lcd.print("      ");
     lcd.print(points);
 
     errors_during_loop[diode_no] = 1;
@@ -210,7 +211,8 @@ void penalty(int diode_no) {
 }
 void add_points(int light_remaining) {
   points += light_remaining * 10;
-  lcd.setCursor(0, 10);
+  lcd.setCursor(9, 1);
+  lcd.print("      ");
   lcd.print(points);
   tone(buzzer, 800);
   delay(250);
