@@ -16,7 +16,7 @@ int led_green_values[] = {0, 0, 0};
 
 // PROPERTIES
 
-int target_id = 0;
+int target_id = -1;
 int time_to_hit = 1500;
 int color_change_speed = 5;
 bool errors_during_loop[3] = {0, 0, 0};
@@ -108,7 +108,7 @@ void penalty(int diode_id) {
 void pause_game() {
   double time;
   double start_time;
-  target_id = 0;
+  target_id = -1;
 
   for (int i = 0; i < led_number; i++) {
     led_red_values[i] = 0;
@@ -131,7 +131,7 @@ void pause_game() {
 }
 
 void light_a_target() {
-  target_id = rand() % 3;
+  target_id = rand() % led_number;
   update_red_led(target_id, 60);
 }
 
@@ -146,7 +146,7 @@ void playing_time () {
     // input detection
     int input = scan_input();
 
-    if (target_id == input) {
+    if (input == target_id) {
       add_points(led_red_values[target_id]);
       update_red_led(target_id, 0);
 
@@ -157,7 +157,7 @@ void playing_time () {
 
       break;
     }
-    else if (target_id != -1)
+    else if (input != -1)
       penalty(input);
 
     // dim led diode when nothing
