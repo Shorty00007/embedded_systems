@@ -24,7 +24,7 @@ int points = 0;
 
 // unused (for now)
 int loop_no = 0;
-int time_to_play = 15000;
+int time_to_play = 18000;
 bool game_ended = false;
 
 
@@ -190,6 +190,7 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print("Score: ");
     lcd.print(points);
+    delay(250);
     return;
   }
   pause_game();
