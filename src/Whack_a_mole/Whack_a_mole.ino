@@ -58,21 +58,25 @@ int scan_input() {
 // SYSTEM UTIL
 
 void update_clock() {
-    lcd.setCursor(0, 1);
+    lcd.setCursor(0, 0);
     lcd.print("Time: ");
-    lcd.print(time_to_play - millis() / 1000);
+    lcd.print((time_to_play - millis()) / 1000);
     lcd.print("s");
     if (millis() > time_to_play) {
       game_ended = true;
     }
 }
 
-void add_points(int light_remaining) {
-  points += light_remaining * 10;
+void print_points() {
   lcd.setCursor(9, 1);
   lcd.print("      ");
   lcd.setCursor(9, 1);
   lcd.print(points);
+}
+
+void add_points(int light_remaining) {
+  points += light_remaining * 10;
+  print_points();
   tone(buzzer_pin, 800);
   delay(250);
   noTone(buzzer_pin);
@@ -84,10 +88,7 @@ void penalty(int diode_id) {
     // (This method means that we can not get penalty twice for clicking the same diode during a single loop)
     
     points -= 450;
-    lcd.setCursor(9, 1);
-    lcd.print("      ");
-    lcd.setCursor(9, 1);
-    lcd.print(points);
+    print_points();
 
     errors_during_loop[diode_id] = 1;
     tone(buzzer_pin, 300);
