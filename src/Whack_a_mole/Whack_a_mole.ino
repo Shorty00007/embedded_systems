@@ -59,24 +59,21 @@ int scan_input() {
 
 void update_clock() {
     lcd.setCursor(7, 0);
-    lcd.print("     ");
-    lcd.setCursor(7, 0);
     if (millis() > time_to_play) {
       game_ended = true;
       lcd.print("0s");
     }
     else {
       lcd.print((time_to_play - millis()) / 1000);
-      lcd.print("s");
+      lcd.print("s ");
     }
     
 }
 
 void print_points() {
   lcd.setCursor(9, 1);
-  lcd.print("      ");
-  lcd.setCursor(9, 1);
   lcd.print(points);
+  lcd.print("      ");
 }
 
 void add_points(int light_remaining) {
@@ -191,13 +188,13 @@ void setup() {
 
 void loop() {
   if (game_ended){
-    lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Game Over.");
+    lcd.print("Game Over.    ");
     lcd.setCursor(0, 1);
     lcd.print("Score: ");
     lcd.print(points);
-    delay(1000);
+    lcd.print("     ");
+    delay(3000);
     return(0);
   }
   pause_game();
