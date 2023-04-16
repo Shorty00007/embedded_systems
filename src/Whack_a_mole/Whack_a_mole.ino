@@ -19,12 +19,13 @@ int led_green_values[] = {0, 0, 0};
 int target_id = 0;
 int time_to_hit = 1500;
 int color_change_speed = 5;
-bool errors_during_loop[3] = {0, 0, 0};
+bool errors_during_loop[led_number];
 int points = 0;
 
 // unused (for now)
 int loop_no = 0;
-int time_to_play = 10;
+int time_to_play = 15000;
+int start_time = millis();
 
 
 // IO UTIL
@@ -52,14 +53,12 @@ int scan_input() {
   }
   return id;
 }
-
-
-// SYSTEM UTIL
+// SYSTEM UTIL ------------------------------------------------------------------------
 
 void update_clock() {
     lcd.setCursor(0, 1);
     lcd.print("Time: ");
-    lcd.print(millis() / 1000);
+    lcd.print(time_to_play - millis() / 1000);
     lcd.print("s");
 }
 
@@ -92,8 +91,13 @@ void penalty(int diode_id) {
   }
 }
 
+void reset_error_tracker() {
+  for (int i = 0; i < led_number; i++) {
+    errors_during_loop[i] = 0;
+  }
+}
 
-// GAME STATES
+// GAME STATES ------------------------------------------------------------------------
 
 void pause_game() {
   double time;
@@ -161,7 +165,7 @@ void playing_time () {
 }
 
 
-// MAIN
+// MAIN ------------------------------------------------------------------------
 
 void setup() {
   for (int i = 0; i < led_number; i++) {
@@ -177,12 +181,10 @@ void setup() {
 }
 
 void loop() {
+  reset_error_tracker();
   pause_game();
   light_a_target();
   playing_time();
   time_to_hit *= 0.92; //speed up the gamne
   loop_no ++;
-  errors_during_loop[0] = 0; //reset error tracker
-  errors_during_loop[1] = 0;
-  errors_during_loop[2] = 0;
 }
