@@ -58,13 +58,18 @@ int scan_input() {
 // SYSTEM UTIL
 
 void update_clock() {
-    lcd.setCursor(0, 0);
-    lcd.print("Time: ");
-    lcd.print((time_to_play - millis()) / 1000);
-    lcd.print("s");
+    lcd.setCursor(7, 0);
+    lcd.print("     ");
+    lcd.setCursor(7, 0);
     if (millis() > time_to_play) {
       game_ended = true;
+      lcd.print("0s");
     }
+    else {
+      lcd.print((time_to_play - millis()) / 1000);
+      lcd.print("s");
+    }
+    
 }
 
 void print_points() {
@@ -178,6 +183,8 @@ void setup() {
   pinMode(buzzer_pin, OUTPUT);
 
   lcd.begin();
+  lcd.setCursor(0, 0);
+  lcd.print("Time: ");
   lcd.setCursor(0, 1);
   lcd.print("Points: ");
 }
@@ -190,8 +197,8 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print("Score: ");
     lcd.print(points);
-    delay(250);
-    return;
+    delay(1000);
+    return(0);
   }
   pause_game();
   light_a_target();
