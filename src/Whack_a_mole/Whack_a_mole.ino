@@ -19,7 +19,7 @@ int led_green_values[] = {0, 0, 0};
 int target_id = 0;
 int time_to_hit = 1500;
 int color_change_speed = 5;
-bool clicked_during_loop[3] = {0, 0, 0};
+bool errors_during_loop[3] = {0, 0, 0};
 int points = 0;
 
 // unused (for now)
@@ -42,8 +42,16 @@ void update_green_led(int id, int value) {
 
 // -1 if none or multiple buttons clicked
 int scan_input() {
-  for (int i = 0; i < led_number; i++)
-    clicked_during_loop[i] = digitalRead(led_input_pins[i]);
+  int id = -1;
+  for (int i = 0; i < led_number; i++) {
+    if (!digitalRead(led_input_pins[i]))
+      continue;
+
+    if (id != -1)
+      return -1;
+    id = i;
+  }
+  return id;
 }
 
 
@@ -71,12 +79,17 @@ void add_points(int light_remaining) {
 }
 
 void penalty(int diode_id) {
+  if (!errors_during_loop[diode_id]) {
+    // if the diode has been pressed for the first time this loop 
+    // (This method means that we can not get penalty twice for clicking the same diode during a single loop)
+    
     points -= 450;
     lcd.setCursor(9, 1);
     lcd.print("      ");
     lcd.setCursor(9, 1);
     lcd.print(points);
 
+    errors_during_loop[diode_id] = 1;
     tone(buzzer_pin, 300);
     delay(500);
     noTone(buzzer_pin);
@@ -96,9 +109,6 @@ void pause_game() {
     led_green_values[i] = 0;
     analogWrite(led_red_pins[i], 0);
   }
-
-  // odczytuje błąd nawet jeśli nic nie klikasz
-  // zczytuje wiele inputów ??
   
   int pause_time = rand() % (time_to_hit / 2) + 500;
   time = millis();
@@ -106,7 +116,7 @@ void pause_game() {
 
   while (millis() < start_time) { 
     update_clock();
-    scan_input();
+    int input = scan_input();
     if (input != -1) {
       penalty(input);
       delay(250);
