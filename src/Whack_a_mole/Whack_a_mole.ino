@@ -95,6 +95,7 @@ void penalty(int diode_id) {
     errors_during_loop[diode_id] = 1;
     tone(buzzer_pin, 300);
     delay(500);
+    time_to_play += 500;
     noTone(buzzer_pin);
   }
 }
@@ -122,7 +123,6 @@ void pause_game() {
     int input = scan_input();
     if (input != -1) {
       penalty(input);
-      delay(250);
     }
   }
 }
@@ -150,6 +150,7 @@ void playing_time () {
       // tick the green diode
       update_green_led(target_id, 50);
       delay(time_to_hit * 0.7);
+      time_to_play += time_to_hit * 0.7;
       update_green_led(target_id, 0);
 
       break;
