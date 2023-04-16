@@ -24,7 +24,8 @@ int points = 0;
 
 // unused (for now)
 int loop_no = 0;
-int time_to_play = 10;
+int time_to_play = 15000;
+bool game_ended = false;
 
 
 // IO UTIL
@@ -51,8 +52,11 @@ int scan_input() {
 void update_clock() {
     lcd.setCursor(0, 1);
     lcd.print("Time: ");
-    lcd.print(millis() / 1000);
+    lcd.print(time_to_play - millis() / 1000);
     lcd.print("s");
+    if (millis() > time_to_play) {
+      game_ended = true;
+    }
 }
 
 void add_points(int light_remaining) {
@@ -167,6 +171,15 @@ void setup() {
 }
 
 void loop() {
+  if (game_ended){
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Game Over.")
+    lcd.setCursor(0, 1);
+    lcd.print("Score: ");
+    lcd.print(points);
+    return;
+  }
   pause_game();
   light_a_target();
   playing_time();
