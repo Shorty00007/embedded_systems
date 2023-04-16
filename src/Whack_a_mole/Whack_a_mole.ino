@@ -139,9 +139,8 @@ void playing_time () {
 
     // input detection
     int input = scan_input();
-    if (target_id != input)
-      penalty(input);
-    else {
+
+    if (target_id == input) {
       add_points(led_red_values[target_id]);
       update_red_led(target_id, 0);
 
@@ -152,6 +151,8 @@ void playing_time () {
 
       break;
     }
+    else if (target_id != -1)
+      penalty(input);
 
     // dim led diode when nothing
     led_red_values[target_id] -= color_change_speed;
@@ -184,7 +185,7 @@ void loop() {
   if (game_ended){
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Game Over.")
+    lcd.print("Game Over.");
     lcd.setCursor(0, 1);
     lcd.print("Score: ");
     lcd.print(points);
